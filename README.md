@@ -13,7 +13,8 @@ AGPL
 #### Installation
 
 To Install Version-15 branch
-	```sh
-	bench get-app https://github.com/ajayyuvabe/WooCommerceConnector.git --branch version-15
-	```
+
+```sh
+bench get-app https://github.com/ajayyuvabe/WooCommerceConnector.git --branch version-15
+```
     
