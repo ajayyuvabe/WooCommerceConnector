@@ -69,7 +69,7 @@ def valid_customer_and_product(woocommerce_order):
 	# new function item based on product id
     for item in woocommerce_order.get("line_items"):
         if item.get("product_id"):
-            if not frappe.db.get_value("Item", {"woocommerce_product_id": item.get("product_id")}, "item_code"):
+            if not frappe.db.get_value("Item", {"item_code": item.get("product_id")}, "item_code"):
                 make_woocommerce_log(title="Item missing in ERPNext!", status="Error", method="valid_customer_and_product", message="Item with id {0} is missing in ERPNext! The Order {1} will not be imported! For details of order see below".format(item.get("product_id"), woocommerce_order.get("id")),
                     request_data=woocommerce_order, exception=True)
                 return False
@@ -340,10 +340,10 @@ def get_order_items(order_items, woocommerce_settings):
 def get_item_code(woocommerce_item):
     if cint(woocommerce_item.get("variation_id")) > 0:
         # variation
-        item_code = frappe.db.get_value("Item", {"woocommerce_product_id": woocommerce_item.get("variation_id")}, "item_code")
+        item_code = frappe.db.get_value("Item", {"item_code": woocommerce_item.get("variation_id")}, "item_code")
     else:
         # single
-        item_code = frappe.db.get_value("Item", {"woocommerce_product_id": woocommerce_item.get("product_id")}, "item_code")
+        item_code = frappe.db.get_value("Item", {"item_code": woocommerce_item.get("product_id")}, "item_code")
 
     return item_code
 
@@ -410,7 +410,7 @@ def get_shipping_account_head(shipping):
         shipping_title = shipping.get("method_title").encode("utf-8")
 
         shipping_account =  frappe.db.get_value("woocommerce Tax Account", \
-                {"parent": "WooCommerce Config", "woocommerce_tax": shipping_title}, "tax_account")
+                {"parent": "WooCommerce Config", "woocommerce_tax": shipping_title.decode("utf-8")}, "tax_account")
 
         if not shipping_account:
                 frappe.throw("Tax Account not specified for woocommerce shipping method  {0}".format(shipping.get("method_title")))
